@@ -1,0 +1,37 @@
+# Italian translation of nl-ease.
+# Copyright (C) 2026 diekrz2
+# This file is distributed under the same license as the nl-ease package.
+# diekrz2 <diekrz2@bodhilinux.com> 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: nl-ease\n"
+"Report-Msgid-Bugs-To: <diekrz2@bodhilinux.com> \n"
+"POT-Creation-Date: 2026-04-18 21:36+0200\n"
+"PO-Revision-Date: 2026-04-18 21:44+0200\n"
+"Last-Translator: diekrz2\n"
+"Language-Team: \n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/ui.c:60
+msgid "Enabled"
+msgstr "Attivo"
+
+#: src/ui.c:69
+msgid "Temperature"
+msgstr "Tono"
+
+#: src/ui.c:76
+msgid "Start time:"
+msgstr "Ora Inizio:"
+
+#: src/ui.c:90
+msgid "End time:"
+msgstr "Ora Fine:"
+
+#: src/ui.c:104
+msgid "Save"
+msgstr "Salva"
