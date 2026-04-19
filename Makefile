@@ -1,11 +1,60 @@
-CC=gcc
-CFLAGS=`pkg-config --cflags elementary` -Wall -O2
-LDFLAGS=`pkg-config --libs elementary`
+PREFIX ?= /usr
+BINDIR = $(PREFIX)/bin
+DATADIR = $(PREFIX)/share
+APPDIR = $(DATADIR)/applications
+ICONDIR = $(DATADIR)/icons/hicolor/256x256/apps
+LOCALEDIR = $(DATADIR)/locale
 
-SRC=$(wildcard src/*.c)
+CC = gcc
+CFLAGS = `pkg-config --cflags elementary` -Wall -O2
+LDFLAGS = `pkg-config --libs elementary`
 
-all:
-	$(CC) $(SRC) -o nl-ease $(CFLAGS) $(LDFLAGS)
+SRC = $(wildcard src/*.c)
+TARGET = nl-ease
+
+POFILES = $(wildcard po/*.po)
+MOFILES = $(POFILES:.po=.mo)
+
+all: $(TARGET) mo
+
+$(TARGET):
+	$(CC) $(SRC) -o $(TARGET) $(CFLAGS) $(LDFLAGS)
+
+# Compile translations
+mo: $(MOFILES)
+
+po/%.mo: po/%.po
+	msgfmt $< -o $@
+
+# Install
+install: all
+	# binary
+	mkdir -p $(DESTDIR)$(BINDIR)
+	cp $(TARGET) $(DESTDIR)$(BINDIR)/
+
+	# desktop file
+	mkdir -p $(DESTDIR)$(APPDIR)
+	cp data/nl-ease.desktop $(DESTDIR)$(APPDIR)/
+
+	# icon
+	mkdir -p $(DESTDIR)$(ICONDIR)
+	cp data/icon/icon.png $(DESTDIR)$(ICONDIR)/nl-ease.png
+
+	# translations
+	for mo in $(MOFILES); do \
+		lang=$$(basename $$mo .mo); \
+		mkdir -p $(DESTDIR)$(LOCALEDIR)/$$lang/LC_MESSAGES; \
+		cp $$mo $(DESTDIR)$(LOCALEDIR)/$$lang/LC_MESSAGES/nl-ease.mo; \
+	done
+
+uninstall:
+	rm -f $(DESTDIR)$(BINDIR)/$(TARGET)
+	rm -f $(DESTDIR)$(APPDIR)/nl-ease.desktop
+	rm -f $(DESTDIR)$(ICONDIR)/nl-ease.png
+	for mo in $(MOFILES); do \
+		lang=$$(basename $$mo .mo); \
+		rm -f $(DESTDIR)$(LOCALEDIR)/$$lang/LC_MESSAGES/nl-ease.mo; \
+	done
 
 clean:
-	rm -f nl-ease
+	rm -f $(TARGET) po/*.mo
