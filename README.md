@@ -1,5 +1,6 @@
 # nl-ease
-A tool to easily set the night light. Simple tool written in C and the Enlightenment Foundation Libraries. It allows you to choose the color intensity thanks to **xrandr**, set a start time, end time and save the settings. (nl = "night light" 😊 )
+A tool to easily set the night light. Simple tool written in C and the Enlightenment Foundation Libraries. It allows you to choose the color intensity thanks to **xrandr**, set a start time, end time and save the settings. \
+(nl = "night light" 😊 )
 
 Designed for Bodhi Linux 7 but may also work on other distros with EFL development package installed.\
 Supported languages: English, Italian and Polish.
