@@ -55,16 +55,18 @@ void xrandr_set_temperature(int temp)
 
 void xrandr_reset(void)
 {
+	// force detect
+    output_name[0] = '\0';        
+    detect_output();
+
     if (output_name[0] == '\0') {
-        detect_output();
+        fprintf(stderr, "xrandr_reset: No output detected\n");
+        return;
     }
 
-    if (output_name[0] == '\0') return;
-
     char cmd[256];
-    snprintf(cmd, sizeof(cmd),
-        "xrandr --output %s --gamma 1:1:1",
-        output_name);
+    snprintf(cmd, sizeof(cmd), "xrandr --output %s --gamma 1:1:1", output_name);
 
+    printf("CMD RESET: %s\n", cmd);
     system(cmd);
 }
