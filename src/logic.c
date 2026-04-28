@@ -15,20 +15,37 @@ static int is_in_schedule(void)
 {
     time_t t = time(NULL);
     struct tm *tm = localtime(&t);
-    int now = tm->tm_hour;
+    // minutes from 12:00
+    int now = tm->tm_hour * 60 + tm->tm_min;   
+
+    int start = state.start_hour * 60;
+    int end   = state.end_hour * 60;
 
     if (state.start_hour < state.end_hour) {
-        return (now >= state.start_hour && now < state.end_hour);
+        // average case
+        return (now >= start && now < end);
     } else {
-        return (now >= state.start_hour || now < state.end_hour);
+        // case with 00:00
+        return (now >= start || now < end);
     }
 }
 
 void logic_apply(void)
 {
-    if (state.enabled && is_in_schedule()) {
+    time_t t = time(NULL);
+    struct tm *tm = localtime(&t);
+    int now = tm->tm_hour;
+    int in_schedule = is_in_schedule();
+
+    printf("[nl-ease %02d:%02d] enabled=%d | start=%d end=%d | in_schedule=%d | action → ",
+           tm->tm_hour, tm->tm_min,
+           state.enabled, state.start_hour, state.end_hour, in_schedule);
+
+    if (state.enabled && in_schedule) {
+        printf("SET TEMPERATURE %d\n", state.temperature);
         xrandr_set_temperature(state.temperature);
     } else {
+        printf("RESET (day mode)\n");
         xrandr_reset();
     }
 }
@@ -41,7 +58,7 @@ void logic_init(void)
     state.end_hour = 6;
 
 	logic_load();
-   // ecore_timer_add(60.0, timer_cb, NULL);
+ // ecore_timer_add(60.0, timer_cb, NULL);
     logic_apply();
 }
 
@@ -124,4 +141,34 @@ void logic_load(void)
     fscanf(f, "end=%d\n", &state.end_hour);
 
     fclose(f);
+}
+
+// DAEMON
+
+static Eina_Bool daemon_timer_cb(void *data)
+{
+	{
+    // read the config 
+    static int counter = 0;
+    // once a minute
+    if (++counter >= 2) {        
+        logic_load();
+        counter = 0;
+    }
+    logic_apply();
+    return ECORE_CALLBACK_RENEW;
+}
+
+void logic_run_daemon(void)
+{
+	// config load
+    logic_init();                   
+
+    // 30 sec timer
+    ecore_timer_add(15.0, daemon_timer_cb, NULL);
+
+    printf("nl-ease-daemon started (PID %d)\n", getpid());
+
+    // main loop pure Ecore (no Elementary)
+    ecore_main_loop_begin();
 }
