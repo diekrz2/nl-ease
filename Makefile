@@ -6,8 +6,8 @@ ICONDIR = $(DATADIR)/icons/hicolor/256x256/apps
 LOCALEDIR = $(DATADIR)/locale
 
 CC = gcc
-CFLAGS = `pkg-config --cflags elementary` -Wall -O2
-LDFLAGS = `pkg-config --libs elementary`
+CFLAGS = `pkg-config --cflags elementary ecore` -Wall -O2
+LDFLAGS = `pkg-config --libs elementary ecore`
 
 SRC = $(wildcard src/*.c)
 TARGET = nl-ease
