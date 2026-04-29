@@ -3,49 +3,58 @@
 #include <Ecore.h>
 #include <time.h>
 #include <sys/stat.h>
+#include <signal.h>
 
 #include "logic.h"
 #include "xrandr.h"
 
 static AppState state;
 
-static Eina_Bool timer_cb(void *data);
+static Eina_Bool daemon_timer_cb(void *data);
+static Eina_Bool signal_handler(void *data);
 
 static int is_in_schedule(void)
 {
     time_t t = time(NULL);
     struct tm *tm = localtime(&t);
-    // minutes from 12:00
-    int now = tm->tm_hour * 60 + tm->tm_min;   
+    
+    int now_minutes = tm->tm_hour * 60 + tm->tm_min;
 
-    int start = state.start_hour * 60;
-    int end   = state.end_hour * 60;
+    int start_minutes = state.start_hour * 60;
+    int end_minutes   = state.end_hour * 60;
 
     if (state.start_hour < state.end_hour) {
         // average case
-        return (now >= start && now < end);
+        return (now_minutes >= start_minutes && now_minutes < end_minutes);
     } else {
-        // case with 00:00
-        return (now >= start || now < end);
+        // midnight case
+        return (now_minutes >= start_minutes || now_minutes < end_minutes);
     }
 }
 
 void logic_apply(void)
 {
-    time_t t = time(NULL);
-    struct tm *tm = localtime(&t);
-    int now = tm->tm_hour;
     int in_schedule = is_in_schedule();
 
-    printf("[nl-ease %02d:%02d] enabled=%d | start=%d end=%d | in_schedule=%d | action → ",
-           tm->tm_hour, tm->tm_min,
-           state.enabled, state.start_hour, state.end_hour, in_schedule);
+    // Logging every 5 minuts 
+    static time_t last_log = 0;
+    time_t now = time(NULL);
+
+    if (now - last_log >= 300) {
+        struct tm *tm = localtime(&now);
+        printf("[nl-ease %02d:%02d] enabled=%d | start=%02d:%02d | end=%02d:%02d | in_schedule=%d → %s\n",
+               tm->tm_hour, tm->tm_min,
+               state.enabled,
+               state.start_hour, 0,
+               state.end_hour, 0,
+               in_schedule,
+               (state.enabled && in_schedule) ? "NIGHT MODE" : "DAY MODE");
+        last_log = now;
+    }
 
     if (state.enabled && in_schedule) {
-        printf("SET TEMPERATURE %d\n", state.temperature);
         xrandr_set_temperature(state.temperature);
     } else {
-        printf("RESET (day mode)\n");
         xrandr_reset();
     }
 }
@@ -57,8 +66,7 @@ void logic_init(void)
     state.start_hour = 22;
     state.end_hour = 6;
 
-	logic_load();
- // ecore_timer_add(60.0, timer_cb, NULL);
+    logic_load();
     logic_apply();
 }
 
@@ -89,10 +97,45 @@ void logic_set_schedule(int start_hour, int end_hour)
     logic_save();
 }
 
-static Eina_Bool timer_cb(void *data)
+// DAEMON
+
+static Eina_Bool signal_handler(void *data)
 {
+    ecore_main_loop_quit();
+    return ECORE_CALLBACK_CANCEL;
+}
+
+static Eina_Bool daemon_timer_cb(void *data)
+{
+    static int load_counter = 0;
+
+    // read conf every 60 sec
+    if (++load_counter >= 4) {        // 4*15s=60s
+        logic_load();
+        load_counter = 0;
+    }
+
     logic_apply();
     return ECORE_CALLBACK_RENEW;
+}
+
+void logic_run_daemon(void)
+{
+    logic_init();
+
+    ecore_timer_add(15.0, daemon_timer_cb, NULL);
+
+    // Clean exit (Ctrl+C, kill, etc.)
+    // ecore_event_handler_add(ECORE_EVENT_SIGNAL_INT,  signal_handler, NULL);
+    // ecore_event_handler_add(ECORE_EVENT_SIGNAL_TERM, signal_handler, NULL);
+
+    printf("nl-ease daemon started (PID %d)\n", getpid());
+    printf("Night light schedule: %02d:00 - %02d:00\n", state.start_hour, state.end_hour);
+
+    ecore_main_loop_begin();
+
+    printf("nl-ease daemon exiting. Resetting display...\n");
+    xrandr_reset();
 }
 
 // CONFIG
@@ -101,12 +144,9 @@ static const char *get_config_path(void)
 {
     static char path[256];
     const char *home = getenv("HOME");
-
     if (!home) home = "/tmp";
 
-    snprintf(path, sizeof(path),
-             "%s/.config/nl-ease.conf", home);
-
+    snprintf(path, sizeof(path), "%s/.config/nl-ease.conf", home);
     return path;
 }
 
@@ -141,34 +181,4 @@ void logic_load(void)
     fscanf(f, "end=%d\n", &state.end_hour);
 
     fclose(f);
-}
-
-// DAEMON
-
-static Eina_Bool daemon_timer_cb(void *data)
-{
-	{
-    // read the config 
-    static int counter = 0;
-    // once a minute
-    if (++counter >= 2) {        
-        logic_load();
-        counter = 0;
-    }
-    logic_apply();
-    return ECORE_CALLBACK_RENEW;
-}
-
-void logic_run_daemon(void)
-{
-	// config load
-    logic_init();                   
-
-    // 30 sec timer
-    ecore_timer_add(15.0, daemon_timer_cb, NULL);
-
-    printf("nl-ease-daemon started (PID %d)\n", getpid());
-
-    // main loop pure Ecore (no Elementary)
-    ecore_main_loop_begin();
 }
