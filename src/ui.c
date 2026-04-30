@@ -36,22 +36,38 @@ on_save_clicked(void *data, Evas_Object *obj, void *event_info)
     logic_save();
 }
 
+static void
+on_launch_daemon_clicked(void *data, Evas_Object *obj, void *event_info)
+{
+    // save first
+    logic_save();
+
+    // close window
+    Evas_Object *win = (Evas_Object *)data;
+    if (win)
+        evas_object_del(win);
+
+    // launch daemon in background
+    system("nl-ease --daemon &");
+
+    elm_exit();
+}
+
 void ui_init(void)
 {
     Evas_Object *win = elm_win_util_standard_add("nl-ease", "nl-ease");
     elm_win_autodel_set(win, EINA_TRUE);
 
-    evas_object_resize(win, 300, 240);
-    evas_object_size_hint_min_set(win, 300, 240);
-    evas_object_size_hint_max_set(win, 300, 240);
+    evas_object_resize(win, 300, 270);
+    evas_object_size_hint_min_set(win, 300, 270);
+    evas_object_size_hint_max_set(win, 300, 270);
     
-    elm_win_size_base_set(win, 300, 240);
+    elm_win_size_base_set(win, 300, 270);
 	elm_win_size_step_set(win, 0, 0);
 
     Evas_Object *box = elm_box_add(win);
     evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     elm_win_resize_object_add(win, box);
-    elm_win_conformant_set(win, EINA_FALSE);
     elm_box_padding_set(box, 0, 4);
     evas_object_show(box);
 
@@ -65,10 +81,12 @@ void ui_init(void)
     // Slider
     Evas_Object *slider = elm_slider_add(win);
     elm_slider_min_max_set(slider, 2500, 6500);
+    elm_slider_inverted_set(slider, EINA_TRUE);
     elm_slider_value_set(slider, 4500);
     elm_object_text_set(slider, _("Temperature"));
     evas_object_smart_callback_add(slider, "changed", on_slider_changed, NULL);
     elm_box_pack_end(box, slider);
+    evas_object_size_hint_min_set(slider, 220, -1);
     evas_object_show(slider);
 
 	// Start label
@@ -98,17 +116,32 @@ void ui_init(void)
 	evas_object_smart_callback_add(end_spinner, "changed", on_schedule_changed, NULL);
 	elm_box_pack_end(box, end_spinner);
 	evas_object_show(end_spinner);
+	
+	// Buttons
+	Evas_Object *btn_box = elm_box_add(win);
+    elm_box_horizontal_set(btn_box, EINA_FALSE);
+    elm_box_homogeneous_set(btn_box, EINA_TRUE);
+    elm_box_padding_set(btn_box, 0, 8);
+    evas_object_size_hint_weight_set(btn_box, EVAS_HINT_EXPAND, 0);
+    elm_box_pack_end(box, btn_box);
+    evas_object_show(btn_box);
 
     // Save button
-    Evas_Object *btn = elm_button_add(win);
-    elm_object_text_set(btn, _("Save"));
-    evas_object_smart_callback_add(btn, "clicked", on_save_clicked, NULL);
-    elm_box_pack_end(box, btn);
-    evas_object_show(btn);
+    Evas_Object *btn_save = elm_button_add(win);
+    elm_object_text_set(btn_save, _("Save Configuration"));
+    evas_object_smart_callback_add(btn_save, "clicked", on_save_clicked, NULL);
+    elm_box_pack_end(btn_box, btn_save);
+    evas_object_show(btn_save);
+    
+    // Close and launch daemon button
+    Evas_Object *btn_daemon = elm_button_add(win);
+    elm_object_text_set(btn_daemon, _("Close and Launch Daemon"));
+    evas_object_smart_callback_add(btn_daemon, "clicked", on_launch_daemon_clicked, win);  // passa win come data
+    elm_box_pack_end(btn_box, btn_daemon);
+    evas_object_show(btn_daemon);
 	
 	// UI sync
 	AppState *s = logic_get_state();
-
 	elm_check_state_set(toggle, s->enabled);
 	elm_slider_value_set(slider, s->temperature);
 	elm_spinner_value_set(start_spinner, s->start_hour);
