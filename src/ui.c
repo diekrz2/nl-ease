@@ -18,7 +18,8 @@ static void
 on_slider_changed(void *data, Evas_Object *obj, void *event_info)
 {
     int val = (int)elm_slider_value_get(obj);
-    logic_set_temperature(val);
+    int real_temperature = 9000 - val;
+    logic_set_temperature(real_temperature);
 }
 
 static void
@@ -81,7 +82,6 @@ void ui_init(void)
     // Slider
     Evas_Object *slider = elm_slider_add(win);
     elm_slider_min_max_set(slider, 2500, 6500);
-    elm_slider_inverted_set(slider, EINA_TRUE);
     elm_slider_value_set(slider, 4500);
     elm_object_text_set(slider, _("Temperature"));
     evas_object_smart_callback_add(slider, "changed", on_slider_changed, NULL);
@@ -143,7 +143,8 @@ void ui_init(void)
 	// UI sync
 	AppState *s = logic_get_state();
 	elm_check_state_set(toggle, s->enabled);
-	elm_slider_value_set(slider, s->temperature);
+	int visual_value = 9000 - s->temperature;
+    elm_slider_value_set(slider, visual_value);
 	elm_spinner_value_set(start_spinner, s->start_hour);
 	elm_spinner_value_set(end_spinner, s->end_hour);
 	
