@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl-ease\n"
 "Report-Msgid-Bugs-To: diekrz2@protonmail.com\n"
-"POT-Creation-Date: 2026-04-18 22:17+0200\n"
-"PO-Revision-Date: 2026-04-19 17:23+0200\n"
+"POT-Creation-Date: 2026-04-30 13:46+0200\n"
+"PO-Revision-Date: 2026-04-30 13:49+0200\n"
 "Last-Translator: diekrz2\n"
 "Language-Team: \n"
 "Language: pl\n"
@@ -17,22 +17,26 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 
-#: src/ui.c:60
+#: src/ui.c:76
 msgid "Enabled"
 msgstr "Włączone"
 
-#: src/ui.c:69
+#: src/ui.c:86
 msgid "Temperature"
 msgstr "Intensywność"
 
-#: src/ui.c:76
+#: src/ui.c:94
 msgid "Start time:"
 msgstr "Czas rozpoczęcia:"
 
-#: src/ui.c:90
+#: src/ui.c:108
 msgid "End time:"
 msgstr "Czas końcowy:"
 
-#: src/ui.c:104
-msgid "Save"
-msgstr "Zapisz"
+#: src/ui.c:131
+msgid "Save Configuration"
+msgstr "Zapisz Konfigurację"
+
+#: src/ui.c:138
+msgid "Close and Launch Daemon"
+msgstr "Zamknij i Uruchom Demona"
