@@ -18,5 +18,6 @@ void logic_run_daemon(void);
 
 void logic_apply(void);
 void logic_save(void);
+void logic_load(void);
 
 #endif
