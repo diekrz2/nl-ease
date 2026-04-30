@@ -3,7 +3,6 @@
 #include <Ecore.h>
 #include <time.h>
 #include <sys/stat.h>
-#include <signal.h>
 
 #include "logic.h"
 #include "xrandr.h"
@@ -11,7 +10,6 @@
 static AppState state;
 
 static Eina_Bool daemon_timer_cb(void *data);
-static Eina_Bool signal_handler(void *data);
 
 static int is_in_schedule(void)
 {
@@ -42,11 +40,10 @@ void logic_apply(void)
 
     if (now - last_log >= 300) {
         struct tm *tm = localtime(&now);
-        printf("[nl-ease %02d:%02d] enabled=%d | start=%02d:%02d | end=%02d:%02d | in_schedule=%d → %s\n",
+        printf("[nl-ease %02d:%02d] enabled=%d | %02d:00-%02d:00 | in_schedule=%d → %s\n",
                tm->tm_hour, tm->tm_min,
                state.enabled,
-               state.start_hour, 0,
-               state.end_hour, 0,
+               state.start_hour, state.end_hour,
                in_schedule,
                (state.enabled && in_schedule) ? "NIGHT MODE" : "DAY MODE");
         last_log = now;
@@ -99,18 +96,12 @@ void logic_set_schedule(int start_hour, int end_hour)
 
 // DAEMON
 
-static Eina_Bool signal_handler(void *data)
-{
-    ecore_main_loop_quit();
-    return ECORE_CALLBACK_CANCEL;
-}
-
 static Eina_Bool daemon_timer_cb(void *data)
 {
     static int load_counter = 0;
 
     // read conf every 60 sec
-    if (++load_counter >= 4) {        // 4*15s=60s
+    if (++load_counter >= 4) {   // 4*15s=60s
         logic_load();
         load_counter = 0;
     }
@@ -124,10 +115,6 @@ void logic_run_daemon(void)
     logic_init();
 
     ecore_timer_add(15.0, daemon_timer_cb, NULL);
-
-    // Clean exit (Ctrl+C, kill, etc.)
-    // ecore_event_handler_add(ECORE_EVENT_SIGNAL_INT,  signal_handler, NULL);
-    // ecore_event_handler_add(ECORE_EVENT_SIGNAL_TERM, signal_handler, NULL);
 
     printf("nl-ease daemon started (PID %d)\n", getpid());
     printf("Night light schedule: %02d:00 - %02d:00\n", state.start_hour, state.end_hour);
