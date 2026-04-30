@@ -5,7 +5,7 @@ A tool to easily set the night light. Simple tool written in C and the Enlighten
 Designed for Bodhi Linux 7 but may also work on other distros with EFL development package installed.\
 Supported languages: English, Italian and Polish.
 
-<img width="311" height="276" alt="nl-ease" src="https://github.com/user-attachments/assets/fff1194b-a9b1-4c3d-bc3c-f3750927b3f7" /> 
+<img width="305" height="307" alt="screenshot" src="https://github.com/user-attachments/assets/74e1af15-8326-4487-971a-7b97041212a9" />
 
 ## Requirements:
 
@@ -24,5 +24,5 @@ sudo apt install libefl-dev
 
 - **Uninstall:**  `make uninstall`
 
-<ins>***Note: work in progress. Use the app at your own risk.***</ins>
+<ins>***Note: work in progress. Use the app at your own risk. Debian 13 based distros may also need***</ins>: `liblua5.1-0-dev`
   
