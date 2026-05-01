@@ -9,7 +9,7 @@ Supported languages: English, Italian and Polish.
 
 ## Requirements:
 
-nl-ease requires an installation of EFL development package.
+nl-ease requires an installation of EFL development package.  (Debian 13 based distros may also need: `liblua5.1-0-dev`)
 
 <ins>***Example EFL development package installs (Bodhi Linux 7):***</ins>
 ```
@@ -20,9 +20,9 @@ sudo apt install libefl-dev
 
 - **Compile:**  `make`
 
-- **Install:**  `make install`
+- **Install:**  `sudo make install`
 
-- **Uninstall:**  `make uninstall`
+- **Uninstall:**  `sudo make uninstall`
 
-<ins>***Note: work in progress. Use the app at your own risk. Debian 13 based distros may also need***</ins>: `liblua5.1-0-dev`
+<ins>***Note: work in progress. Use the app at your own risk***</ins>
   
