@@ -56,6 +56,14 @@ kill_daemon(void)
     printf("Daemon termination attempted.\n");
 }
 
+static void
+reload_daemon(void)
+{
+    pid_t pid = read_daemon_pid();
+    if (pid > 0)
+        kill(pid, SIGHUP);
+}
+
 static pid_t
 read_daemon_pid(void)
 {
@@ -102,6 +110,8 @@ on_toggle_changed(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EIN
         kill_daemon();
     } else {
         printf("Enabled -> ON\n");
+        if (daemon_running())
+            reload_daemon();
     }
 }
 
@@ -113,6 +123,9 @@ on_slider_changed(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EIN
     sprintf(buf, "%d", visual_value);
     elm_object_text_set(vlabel, buf);
     logic_set_temperature(visual_value);
+
+    if (daemon_running())
+        reload_daemon();
 }
 
 static void
@@ -162,6 +175,9 @@ on_schedule_changed(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *
     }
 
     logic_set_schedule(start24, end24);
+    
+    if (daemon_running())
+        reload_daemon();
 }
 
 static void
@@ -217,14 +233,15 @@ on_launch_daemon_clicked(void *data, Evas_Object *obj EINA_UNUSED, void *event_i
     // first time config save
     logic_save();
 
-    if (!daemon_running())
+    if (daemon_running())
     {
-        ecore_exe_run("nl-ease --daemon", NULL);
-        printf("Daemon started.\n");
+        printf("Daemon already running: sending reload signal.\n");
+        reload_daemon();
     }
     else
     {
-        printf("Daemon already running.\n");
+        ecore_exe_run("nl-ease --daemon", NULL);
+        printf("Daemon started.\n");
     }
 
     elm_exit();
