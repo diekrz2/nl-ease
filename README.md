@@ -1,5 +1,5 @@
 # nl-ease
-# TESTING BRANCH
+# STABLE BRANCH
 A tool to easily set the night light. Simple tool written in C and the Enlightenment Foundation Libraries. It allows you to choose the color intensity thanks to **xrandr**, set a start time, end time and save the settings. \
 (nl = "night light")
 
