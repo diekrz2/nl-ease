@@ -123,7 +123,7 @@ get_pid_path(void)
     return path;
 }
 
-/* DAEMON */
+/* Daemon timer (fallback) */
 
 static Eina_Bool
 daemon_timer_cb(void *data EINA_UNUSED)
@@ -140,12 +140,34 @@ daemon_timer_cb(void *data EINA_UNUSED)
     return ECORE_CALLBACK_RENEW;
 }
 
+/* Daemon Signals */
+
+static Eina_Bool
+on_sigterm(void *data EINA_UNUSED, int type EINA_UNUSED, void *event EINA_UNUSED)
+{
+    printf("nl-ease daemon: termination signal received, shutting down...\n");
+    ecore_main_loop_quit();
+    return ECORE_CALLBACK_DONE;
+}
+
+static Eina_Bool
+on_sighup(void *data EINA_UNUSED, int type EINA_UNUSED, void *event EINA_UNUSED)
+{
+    printf("nl-ease daemon: reload signal received, reloading config...\n");
+    logic_load();
+    logic_apply();
+    return ECORE_CALLBACK_DONE;
+}
+
 void
 logic_run_daemon(void)
 {
     logic_init();
 
     ecore_timer_add(15.0, daemon_timer_cb, NULL);
+    
+    ecore_event_handler_add(ECORE_EVENT_SIGNAL_EXIT, on_sigterm, NULL);
+    ecore_event_handler_add(ECORE_EVENT_SIGNAL_HUP,  on_sighup,  NULL);
 
     printf("nl-ease daemon started (PID %d)\n", getpid());
     
