@@ -1,0 +1,54 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR diekrz2
+# This file is distributed under the same license as the nl-ease package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: nl-ease 1.0\n"
+"Report-Msgid-Bugs-To: https://github.com/diekrz2/nl-ease/issues\n"
+"POT-Creation-Date: 2026-07-11 14:18+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/ui.c:283
+msgid "Enabled"
+msgstr ""
+
+#: src/ui.c:297
+msgid "Temperature"
+msgstr ""
+
+#: src/ui.c:312
+msgid "Time format:"
+msgstr ""
+
+#: src/ui.c:323
+msgid "24h"
+msgstr ""
+
+#: src/ui.c:332
+msgid "12h"
+msgstr ""
+
+#: src/ui.c:341
+msgid "Start time:"
+msgstr ""
+
+#: src/ui.c:366
+msgid "End time:"
+msgstr ""
+
+#: src/ui.c:399
+msgid "Save Configuration"
+msgstr ""
+
+#: src/ui.c:405
+msgid "Close and Launch Daemon"
+msgstr ""
