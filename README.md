@@ -1,5 +1,5 @@
 # nl-ease
-# STABLE BRANCH
+# TESTING BRANCH
 A tool to easily set the night light. Simple tool written in C and the Enlightenment Foundation Libraries. It allows you to choose the color intensity thanks to **xrandr**, set a start time, end time and save the settings. \
 (nl = "night light")
 
@@ -7,12 +7,6 @@ Designed for Bodhi Linux 7 but may also work on other distros with EFL developme
 Supported languages: English, French, Italian, Polish and Portuguese
 
 <img width="308" height="316" alt="shot-2026-06-28_16-39-57" src="https://github.com/user-attachments/assets/bf7c9c7d-dcde-4609-8b33-53235cabc7da" />
-
-## Installation:
-It is possible to download a Debian package from: \
-https://github.com/diekrz2/nl-ease/releases/tag/v1.0-1
-
-**Install:**  `sudo apt install ./nl-ease_1.0-1_amd64.deb`
 
 ## Installation from source:
 
