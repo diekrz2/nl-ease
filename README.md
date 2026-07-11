@@ -8,16 +8,23 @@ Supported languages: English, French, Italian, Polish and Portuguese
 
 <img width="308" height="316" alt="shot-2026-06-28_16-39-57" src="https://github.com/user-attachments/assets/bf7c9c7d-dcde-4609-8b33-53235cabc7da" />
 
-## Requirements:
+## Installation:
+It is possible to download a Debian package from: \
+https://github.com/diekrz2/nl-ease/releases/tag/v1.0-1
 
-nl-ease requires an installation of EFL development package.  (Debian 13 based distros may also need: `liblua5.1-0-dev`)
+**Install:**  `sudo apt install ./nl-ease_1.0-1_amd64.deb`
+
+## Installation from source:
+
+### Requirements:
+
+nl-ease requires an installation of EFL development package.  (Debian 12 and 13 based distros may also need: `liblua5.1-0-dev`)
 
 <ins>***Example EFL development package installs (Bodhi Linux 7):***</ins>
 ```
 sudo apt update
 sudo apt install libefl-dev
 ```
-### Installation:
 
 - **Compile:**  `make`
 
