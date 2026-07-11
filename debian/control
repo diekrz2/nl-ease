@@ -1,0 +1,16 @@
+Source: nl-ease
+Section: x11
+Priority: optional
+Maintainer: <diekrz2> <diekrz2@protonmail.com>
+Build-Depends: debhelper-compat (= 13), pkg-config, libefl-dev, gettext
+Standards-Version: 4.6.2
+Homepage: https://github.com/diekrz2/nl-ease
+
+Package: nl-ease
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, x11-xserver-utils
+Description: Night light utility for Moksha based desktops
+ nl-ease is a lightweight night light application for Moksha 
+ based desktops, built with EFL. It lets users schedule automatic 
+ screen color temperature changes via xrandr, running as a small 
+ background daemon with an Elementary-based GUI for configuration.

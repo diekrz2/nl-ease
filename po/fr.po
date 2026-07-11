@@ -26,16 +26,19 @@ msgid "Temperature"
 msgstr "Température"
 
 #: src/ui.c:312
+#, fuzzy
 msgid "Time format:"
-msgstr ""
+msgstr "Format horaire:"
 
 #: src/ui.c:323
+#, fuzzy
 msgid "24h"
-msgstr ""
+msgstr "24h"
 
 #: src/ui.c:332
+#, fuzzy
 msgid "12h"
-msgstr ""
+msgstr "12h"
 
 #: src/ui.c:341
 msgid "Start time:"
