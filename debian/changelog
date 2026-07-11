@@ -1,0 +1,10 @@
+nl-ease (1.0-1) unstable; urgency=medium
+
+  * Initial Debian packaging.
+  * Add configurable 12h/24h time format to the GUI.
+  * Fix daemon reload logic to avoid stale state and display flicker.
+  * Localization.
+  * Temperature slider shows numerical value.
+  * Handle SIGTERM/SIGHUP cleanly in the daemon.
+
+ -- <diekrz2> <diekrz2@protonmail.com>  Sat, 11 Jul 2026 14:00:00 +0200
