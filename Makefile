@@ -55,7 +55,8 @@ uninstall:
 		lang=$$(basename $$mo .mo); \
 		rm -f $(DESTDIR)$(LOCALEDIR)/$$lang/LC_MESSAGES/nl-ease.mo; \
 	done
-
+	
+	# remove old configs 
 	@if [ -n "$(SUDO_USER)" ]; then \
 		USER_HOME=$$(getent passwd $(SUDO_USER) | cut -d: -f6); \
 	else \
