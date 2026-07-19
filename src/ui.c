@@ -15,6 +15,9 @@ static Evas_Object *ampm_end_label;
 static Evas_Object *radio_24h;
 static Evas_Object *radio_12h;
 static int use_12h = 0;
+static Evas_Object *win_ref;
+static Evas_Object *start_hbox_ref;
+static Evas_Object *end_hbox_ref;
 
 static pid_t read_daemon_pid(void);
 
@@ -180,6 +183,19 @@ on_schedule_changed(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *
         reload_daemon();
 }
 
+static Evas_Object *
+replace_ampm_label(Evas_Object *hbox, Evas_Object *old_label, const char *text)
+{
+    if (old_label)
+        evas_object_del(old_label);
+
+    Evas_Object *lbl = elm_label_add(win_ref);
+    elm_object_text_set(lbl, text);
+    elm_box_pack_end(hbox, lbl);
+    evas_object_show(lbl);
+    return lbl;
+}
+
 static void
 on_format_changed(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EINA_UNUSED)
 {
@@ -187,37 +203,30 @@ on_format_changed(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EIN
     logic_get_state()->use_12h = use_12h;
     logic_save();
 
-    // read 24h values from logic
     const AppState *s = logic_get_state();
 
     if (use_12h) {
-        // start conversion to 12h
         int h12, is_pm;
         to_12h(s->start_hour, &h12, &is_pm);
         elm_spinner_min_max_set(start_spinner, 1, 12);
         elm_spinner_wrap_set(start_spinner, EINA_TRUE);
         elm_spinner_value_set(start_spinner, h12);
-        elm_object_text_set(ampm_start_label, is_pm ? "PM" : "AM");
-        evas_object_show(ampm_start_label);
+        ampm_start_label = replace_ampm_label(start_hbox_ref, ampm_start_label, is_pm ? "PM" : "AM");
 
         to_12h(s->end_hour, &h12, &is_pm);
         elm_spinner_min_max_set(end_spinner, 1, 12);
         elm_spinner_wrap_set(end_spinner, EINA_TRUE);
         elm_spinner_value_set(end_spinner, h12);
-        elm_object_text_set(ampm_end_label, is_pm ? "PM" : "AM");
-        evas_object_show(ampm_end_label);
-        
+        ampm_end_label = replace_ampm_label(end_hbox_ref, ampm_end_label, is_pm ? "PM" : "AM");
+
     } else {
-        // back to 24h
         elm_spinner_min_max_set(start_spinner, 0, 23);
         elm_spinner_value_set(start_spinner, s->start_hour);
-        elm_object_text_set(ampm_start_label, "");
-        evas_object_hide(ampm_start_label);
+        ampm_start_label = replace_ampm_label(start_hbox_ref, ampm_start_label, "");
 
         elm_spinner_min_max_set(end_spinner, 0, 23);
         elm_spinner_value_set(end_spinner, s->end_hour);
-        elm_object_text_set(ampm_end_label, "");
-        evas_object_hide(ampm_end_label);
+        ampm_end_label = replace_ampm_label(end_hbox_ref, ampm_end_label, "");
     }
 }
 
@@ -264,6 +273,7 @@ void
 ui_init(void)
 {
     Evas_Object *win = elm_win_util_standard_add("nl-ease", "nl-ease");
+    win_ref = win;
     elm_win_autodel_set(win, EINA_TRUE);
 
     evas_object_resize(win, 300, 280);
@@ -274,6 +284,7 @@ ui_init(void)
     elm_win_size_step_set(win, 0, 0);
 
     Evas_Object *box = elm_box_add(win);
+    elm_box_padding_set(box, 0, 4);
     evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     elm_win_resize_object_add(win, box);
     evas_object_show(box);
@@ -343,6 +354,7 @@ ui_init(void)
     evas_object_show(start_label);
 
     Evas_Object *start_hbox = elm_box_add(win);
+    start_hbox_ref = start_hbox;
     elm_box_horizontal_set(start_hbox, EINA_TRUE);
     elm_box_padding_set(start_hbox, 6, 0);
     elm_box_pack_end(box, start_hbox);
@@ -368,6 +380,7 @@ ui_init(void)
     evas_object_show(end_label);
 
     Evas_Object *end_hbox = elm_box_add(win);
+    end_hbox_ref = end_hbox;
     elm_box_horizontal_set(end_hbox, EINA_TRUE);
     elm_box_padding_set(end_hbox, 6, 0);
     elm_box_pack_end(box, end_hbox);
