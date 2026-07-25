@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl-ease 1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/diekrz2/nl-ease/issues\n"
-"POT-Creation-Date: 2026-07-11 14:18+0200\n"
+"POT-Creation-Date: 2026-07-19 19:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,38 +17,38 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/ui.c:283
+#: src/ui.c:294
 msgid "Enabled"
 msgstr ""
 
-#: src/ui.c:297
+#: src/ui.c:308
 msgid "Temperature"
 msgstr ""
 
-#: src/ui.c:312
+#: src/ui.c:323
 msgid "Time format:"
 msgstr ""
 
-#: src/ui.c:323
+#: src/ui.c:334
 msgid "24h"
 msgstr ""
 
-#: src/ui.c:332
+#: src/ui.c:343
 msgid "12h"
 msgstr ""
 
-#: src/ui.c:341
+#: src/ui.c:352
 msgid "Start time:"
 msgstr ""
 
-#: src/ui.c:366
+#: src/ui.c:378
 msgid "End time:"
 msgstr ""
 
-#: src/ui.c:399
+#: src/ui.c:412
 msgid "Save Configuration"
 msgstr ""
 
-#: src/ui.c:405
+#: src/ui.c:418
 msgid "Close and Launch Daemon"
 msgstr ""
