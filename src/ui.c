@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <Elementary.h>
 #include <libintl.h>
 #include <unistd.h>
@@ -37,24 +38,28 @@ to_12h(int h24, int *h12_out, int *is_pm_out)
 }
 
 static Eina_Bool
-kill_force_cb(void *data EINA_UNUSED)
+kill_force_cb(void *data)
 {
     pid_t pid = read_daemon_pid();
     if (pid > 0)
         kill(pid, SIGKILL);
 
+    int should_exit = (int)(intptr_t)data;
+    if (should_exit)
+        elm_exit();
+
     return ECORE_CALLBACK_CANCEL;
 }
 
 static void
-kill_daemon(void)
+kill_daemon(int exit_after)
 {
     pid_t pid = read_daemon_pid();
 
     if (pid > 0)
         kill(pid, SIGTERM);
 
-    ecore_timer_add(0.15, kill_force_cb, NULL);
+    ecore_timer_add(0.15, kill_force_cb, (void *)(intptr_t)exit_after);
 
     printf("Daemon termination attempted.\n");
 }
@@ -78,7 +83,7 @@ read_daemon_pid(void)
         return -1;
 
     char path[256];
-    snprintf(path, sizeof(path), "%s/.config/nl-ease.pid", home);
+    snprintf(path, sizeof(path), "%s/.config/nl-ease/nl-ease.pid", home);
 
     f = fopen(path, "r");
     if (!f)
@@ -110,7 +115,7 @@ on_toggle_changed(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EIN
 
     if (enabled == 0) {
         printf("Enabled -> OFF: killing daemon...\n");
-        kill_daemon();
+        kill_daemon(0);
     } else {
         printf("Enabled -> ON\n");
         if (daemon_running())
@@ -134,45 +139,36 @@ on_slider_changed(void *data EINA_UNUSED, Evas_Object *obj, void *event_info EIN
 static void
 on_schedule_changed(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_info EINA_UNUSED)
 {
-    static int prev_start = -1;
-    static int prev_end   = -1;
-
     int start_raw = (int)elm_spinner_value_get(start_spinner);
     int end_raw   = (int)elm_spinner_value_get(end_spinner);
 
     int start24, end24;
 
     if (use_12h) {
-        // Find the wrap and update AM/PM before reading the label 
-        if (prev_start >= 0) {
-            if ((prev_start == 11 && start_raw == 12) ||
-                (prev_start == 12 && start_raw == 11)) {
-                const char *t = elm_object_text_get(ampm_start_label);
-                elm_object_text_set(ampm_start_label, (t && t[0] == 'P') ? "AM" : "PM");
-            }
-        }
-        if (prev_end >= 0) {
-            if ((prev_end == 11 && end_raw == 12) ||
-                (prev_end == 12 && end_raw == 11)) {
-                const char *t = elm_object_text_get(ampm_end_label);
-                elm_object_text_set(ampm_end_label, (t && t[0] == 'P') ? "AM" : "PM");
-            }
-        }
+        const AppState *s = logic_get_state();
 
-        prev_start = start_raw;
-        prev_end   = end_raw;
+        /* For each spinner checks both AM and PM for the new 12h value,
+           and picks the nearest to the old 24h value. */
+        int cand_am = to_24h(start_raw, 0);
+        int cand_pm = to_24h(start_raw, 1);
+        int diff_am = abs(cand_am - s->start_hour);
+        if (diff_am > 12) diff_am = 24 - diff_am;
+        int diff_pm = abs(cand_pm - s->start_hour);
+        if (diff_pm > 12) diff_pm = 24 - diff_pm;
+        start24 = (diff_am <= diff_pm) ? cand_am : cand_pm;
 
-        // read the updated label
-        const char *sl = elm_object_text_get(ampm_start_label);
-        const char *el = elm_object_text_get(ampm_end_label);
-        int start_pm = (sl && sl[0] == 'P') ? 1 : 0;
-        int end_pm   = (el && el[0] == 'P') ? 1 : 0;
+        cand_am = to_24h(end_raw, 0);
+        cand_pm = to_24h(end_raw, 1);
+        diff_am = abs(cand_am - s->end_hour);
+        if (diff_am > 12) diff_am = 24 - diff_am;
+        diff_pm = abs(cand_pm - s->end_hour);
+        if (diff_pm > 12) diff_pm = 24 - diff_pm;
+        end24 = (diff_am <= diff_pm) ? cand_am : cand_pm;
 
-        start24 = to_24h(start_raw, start_pm);
-        end24   = to_24h(end_raw,   end_pm);
+        // update AM/PM label according to the new value selected
+        elm_object_text_set(ampm_start_label, (start24 >= 12) ? "PM" : "AM");
+        elm_object_text_set(ampm_end_label,   (end24   >= 12) ? "PM" : "AM");
     } else {
-        prev_start = -1;
-        prev_end   = -1;
         start24 = start_raw;
         end24   = end_raw;
     }
@@ -263,7 +259,9 @@ on_win_delete(void *data EINA_UNUSED, Evas_Object *obj EINA_UNUSED, void *event_
     
     if (!s->enabled) {
         printf("Closing GUI with Enabled=OFF -> killing daemon\n");
-        kill_daemon();
+        // elm_exit() after a force-kill attempt
+        kill_daemon(1);   
+        return;
     }
     
     elm_exit();
@@ -363,6 +361,7 @@ ui_init(void)
     start_spinner = elm_spinner_add(win);
     elm_spinner_min_max_set(start_spinner, 0, 23);
     elm_spinner_wrap_set(start_spinner, EINA_TRUE);
+    elm_spinner_editable_set(start_spinner, EINA_FALSE);
     elm_spinner_value_set(start_spinner, 22);
     evas_object_smart_callback_add(start_spinner, "changed", on_schedule_changed, NULL);
     elm_box_pack_end(start_hbox, start_spinner);
@@ -389,6 +388,7 @@ ui_init(void)
     end_spinner = elm_spinner_add(win);
     elm_spinner_min_max_set(end_spinner, 0, 23);
     elm_spinner_wrap_set(end_spinner, EINA_TRUE);
+    elm_spinner_editable_set(end_spinner, EINA_FALSE);
     elm_spinner_value_set(end_spinner, 6);
     evas_object_smart_callback_add(end_spinner, "changed", on_schedule_changed, NULL);
     elm_box_pack_end(end_hbox, end_spinner);
