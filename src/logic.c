@@ -18,6 +18,9 @@ static int       is_in_schedule(void);
 static int
 is_in_schedule(void)
 {
+    if (state.start_hour == state.end_hour)
+        return 0;   // same start/end means "never active" 
+
     time_t t = time(NULL);
     const struct tm *tm = localtime(&t);
 
@@ -117,7 +120,7 @@ get_pid_path(void)
         home = "/tmp";
 
     snprintf(path, sizeof(path),
-             "%s/.config/nl-ease.pid",
+             "%s/.config/nl-ease/nl-ease.pid",
              home);
 
     return path;
@@ -170,7 +173,16 @@ logic_run_daemon(void)
     ecore_event_handler_add(ECORE_EVENT_SIGNAL_HUP,  on_sighup,  NULL);
 
     printf("nl-ease daemon started (PID %d)\n", getpid());
-    
+
+    const char *home_dir = getenv("HOME");
+    if (home_dir) {
+        char base_dir[256], dir[256];
+        snprintf(base_dir, sizeof(base_dir), "%s/.config", home_dir);
+        mkdir(base_dir, 0755);
+        snprintf(dir, sizeof(dir), "%s/.config/nl-ease", home_dir);
+        mkdir(dir, 0755);
+    }
+
     FILE *f = fopen(get_pid_path(), "w");
     if (f)
     {
@@ -196,7 +208,7 @@ get_config_path(void)
     const char *home = getenv("HOME");
     if (!home) home = "/tmp";
 
-    snprintf(path, sizeof(path), "%s/.config/nl-ease.conf", home);
+    snprintf(path, sizeof(path), "%s/.config/nl-ease/nl-ease.conf", home);
     return path;
 }
 
@@ -206,8 +218,10 @@ logic_save(void)
     const char *home = getenv("HOME");
     if (!home) return;
 
-    char dir[256];
-    snprintf(dir, sizeof(dir), "%s/.config", home);
+    char base_dir[256], dir[256];
+    snprintf(base_dir, sizeof(base_dir), "%s/.config", home);
+    mkdir(base_dir, 0755);
+    snprintf(dir, sizeof(dir), "%s/.config/nl-ease", home);
     mkdir(dir, 0755);
 
     FILE *f = fopen(get_config_path(), "w");
