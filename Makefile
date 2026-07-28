@@ -62,9 +62,11 @@ uninstall:
 	else \
 		USER_HOME=$$HOME; \
 	fi; \
-	rm -f "$$USER_HOME/.config/nl-ease.conf"; \
-	rm -f "$$USER_HOME/.config/nl-ease.lock"; \
-	rm -f "$$USER_HOME/.config/nl-ease.pid"
+    rm -f "$$USER_HOME/.config/nl-ease/nl-ease.conf"; \
+	rm -f "$$USER_HOME/.config/nl-ease/nl-ease.lock"; \
+	rm -f "$$USER_HOME/.config/nl-ease/nl-ease-daemon.lock"; \
+	rm -f "$$USER_HOME/.config/nl-ease/nl-ease.pid"; \
+	rmdir "$$USER_HOME/.config/nl-ease" 2>/dev/null || true
 
 clean:
 	rm -f $(TARGET) po/*.mo
