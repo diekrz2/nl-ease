@@ -24,10 +24,15 @@ int main(int argc, char **argv)
     // Check arguments
     if (argc > 1) {
         if (strcmp(argv[1], "--daemon") == 0) {
+            if (!lock_daemon())
+                return 0;
+
             ecore_init();
             // no going back
             logic_run_daemon();        
-            ecore_shutdown();         
+            ecore_shutdown();
+
+            unlock_daemon();
             return 0;
         }
         else if (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0) {
