@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: nl-ease 1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/diekrz2/nl-ease/issues\n"
 "POT-Creation-Date: 2026-07-29 12:41+0200\n"
-"PO-Revision-Date: 2026-06-17 16:14+0100\n"
+"PO-Revision-Date: 2026-07-29 15:29+0100\n"
 "Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
 "Language-Team: \n"
 "Language: pt\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: src/ui.c:292
 msgid "Enabled"
@@ -24,20 +24,17 @@ msgstr "Ativada"
 
 #: src/ui.c:306
 msgid "Temperature"
-msgstr "Temperatura de cor"
+msgstr "Temperatura"
 
 #: src/ui.c:321
-#, fuzzy
 msgid "Time format:"
-msgstr "Formato de hora:"
+msgstr "Formato da hora:"
 
 #: src/ui.c:332
-#, fuzzy
 msgid "24h"
 msgstr "24h"
 
 #: src/ui.c:341
-#, fuzzy
 msgid "12h"
 msgstr "12h"
 
