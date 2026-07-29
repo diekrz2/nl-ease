@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl-ease\n"
 "Report-Msgid-Bugs-To: https://github.com/diekrz2/nl-ease/issues\n"
-"POT-Creation-Date: 2026-07-19 19:19+0200\n"
+"POT-Creation-Date: 2026-07-29 12:41+0200\n"
 "PO-Revision-Date: 2026-06-11 12:00+0200\n"
 "Last-Translator: diekrz2\n"
 "Language-Team: \n"
@@ -18,31 +18,31 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 "
 "|| n%100>14) ? 1 : 2);\n"
 
-#: src/ui.c:294
+#: src/ui.c:292
 msgid "Enabled"
 msgstr "Włączone"
 
-#: src/ui.c:308
+#: src/ui.c:306
 msgid "Temperature"
 msgstr "Intensywność"
 
-#: src/ui.c:323
+#: src/ui.c:321
 msgid "Time format:"
 msgstr "Format czasu:"
 
-#: src/ui.c:334
+#: src/ui.c:332
 msgid "24h"
 msgstr "24 godz"
 
-#: src/ui.c:343
+#: src/ui.c:341
 msgid "12h"
 msgstr "12 godz"
 
-#: src/ui.c:352
+#: src/ui.c:350
 msgid "Start time:"
 msgstr "Czas rozpoczęcia:"
 
-#: src/ui.c:378
+#: src/ui.c:377
 msgid "End time:"
 msgstr "Czas końcowy:"
 

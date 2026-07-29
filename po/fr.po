@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nl-ease 1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/diekrz2/nl-ease/issues\n"
-"POT-Creation-Date: 2026-07-19 19:19+0200\n"
+"POT-Creation-Date: 2026-07-29 12:41+0200\n"
 "PO-Revision-Date: 2026-06-19 07:32+0200\n"
 "Last-Translator: Philippe Jean Guillaumie <similar@orange.fr>\n"
 "Language-Team: \n"
@@ -17,34 +17,34 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.9\n"
 
-#: src/ui.c:294
+#: src/ui.c:292
 msgid "Enabled"
 msgstr "Activé"
 
-#: src/ui.c:308
+#: src/ui.c:306
 msgid "Temperature"
 msgstr "Température"
 
-#: src/ui.c:323
+#: src/ui.c:321
 #, fuzzy
 msgid "Time format:"
 msgstr "Format horaire:"
 
-#: src/ui.c:334
+#: src/ui.c:332
 #, fuzzy
 msgid "24h"
 msgstr "24h"
 
-#: src/ui.c:343
+#: src/ui.c:341
 #, fuzzy
 msgid "12h"
 msgstr "12h"
 
-#: src/ui.c:352
+#: src/ui.c:350
 msgid "Start time:"
 msgstr "Heure de début :"
 
-#: src/ui.c:378
+#: src/ui.c:377
 msgid "End time:"
 msgstr "Heure de fin :"
 
