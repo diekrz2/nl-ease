@@ -1,3 +1,18 @@
+nl-ease (1.1-1) unstable; urgency=medium
+
+  * Add single-instance locking for daemon mode.
+  * Fix schedule window edge case when start hour equals end hour.
+  * Make 12h/24h AM-PM detection robust against fast drags and
+    multi-step spinner jumps.
+  * Move config, pid and lock files into a dedicated
+    ~/.config/nl-ease/ subfolder.
+  * Fix save button spacing and stale AM/PM label rendering on
+    format switch.
+  * Delay GUI exit until the daemon force-kill safety timer runs.
+  * Localization update.
+
+ -- diekrz2 <diekrz2@protonmail.com>  Thu, 30 Jul 2026 16:09:00 +0200
+
 nl-ease (1.0-1) unstable; urgency=medium
 
   * Initial Debian packaging.
