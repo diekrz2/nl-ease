@@ -10,9 +10,9 @@ Supported languages: English, French, Italian, Polish and Portuguese
 
 ## Installation:
 It is possible to download a Debian package from: \
-https://github.com/diekrz2/nl-ease/releases/tag/v1.0-1
+https://github.com/diekrz2/nl-ease/releases/tag/v1.1-1
 
-**Install:**  `sudo apt install ./nl-ease_1.0-1_amd64.deb`
+**Install:**  `sudo apt install ./nl-ease_1.1-1_amd64.deb`
 
 ## Installation from source:
 
