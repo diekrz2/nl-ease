@@ -1,19 +1,25 @@
-min256-finder (1.2-1) unstable; urgency=medium
+nl-ease (1.1-1) unstable; urgency=medium
 
-  * Add cancelable threaded SHA256 calculation to keep GUI responsive
-  * Add New/Exit workflow buttons after calculation completes
-  * Fix zero-byte file division error and missing-file edge cases
-  * Increase read buffer size for better performance on large ISOs
-  * Update Italian and Polish translations for new UI strings
+  * Add single-instance locking for daemon mode.
+  * Fix schedule window edge case when start hour equals end hour.
+  * Make 12h/24h AM-PM detection robust against fast drags and
+    multi-step spinner jumps.
+  * Move config, pid and lock files into a dedicated
+    ~/.config/nl-ease/ subfolder.
+  * Fix save button spacing and stale AM/PM label rendering on
+    format switch.
+  * Delay GUI exit until the daemon force-kill safety timer runs.
+  * Localization update.
 
- -- diekrz2 <diekrz2@bodhilinux.com>  Thu, 06 Aug 2026 15:00:00 +0200
+ -- diekrz2 <diekrz2@protonmail.com>  Thu, 30 Jul 2026 16:09:00 +0200
 
-min256-finder (1.1-1) unstable; urgency=medium
+nl-ease (1.0-1) unstable; urgency=medium
 
-  * Add icon
-  * Switch to Debian-controlled install layout
-  * Main desktop entry: min256-finder.desktop
-  * Localization 
-  * Show progress percentage during calculation
+  * Initial Debian packaging.
+  * Add configurable 12h/24h time format to the GUI.
+  * Fix daemon reload logic to avoid stale state and display flicker.
+  * Localization.
+  * Temperature slider shows numerical value.
+  * Handle SIGTERM/SIGHUP cleanly in the daemon.
 
- -- diekrz2 <diekrz2@bodhilinux.com>  Wed, 15 Apr 2026 18:00:00 +0200
+ -- diekrz2 <diekrz2@protonmail.com>  Sat, 11 Jul 2026 23:00:00 +0200
