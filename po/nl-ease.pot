@@ -6,7 +6,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: nl-ease 1.0\n"
+"Project-Id-Version: nl-ease 1.1\n"
 "Report-Msgid-Bugs-To: https://github.com/diekrz2/nl-ease/issues\n"
 "POT-Creation-Date: 2026-07-29 12:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
